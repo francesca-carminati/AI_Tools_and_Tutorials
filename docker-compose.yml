@@ -1,0 +1,35 @@
+version: '2.3'
+services:
+  jupyter-server:
+    image: ${COMPOSE_PROJECT_NAME}
+    command: conda run -n Example jupyter-lab notebooks --ip=0.0.0.0 --no-browser --NotebookApp.token="${JUPYTER_PW}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID}
+        USER_NAME: ${USER_NAME}
+        NEPTUNE_API_TOKEN: ${NEPTUNE_API_TOKEN}
+        NEPTUNE_PROJECT: ${NEPTUNE_PROJECT}
+    ports:
+      - ${JUPYTER_PORT}:8888
+    user: ${USER_ID}
+    runtime: ${RUNTIME}
+    network_mode: bridge
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=${GPU_IDS}
+    volumes:
+      - ${PROJECT_DIR}/data:/workspace/data
+      - ${PROJECT_DIR}/models:/workspace/models
+      - ${PROJECT_DIR}/scripts:/workspace/scripts
+      - ${PROJECT_DIR}/example:/workspace/example
+      - ${PROJECT_DIR}/notebooks:/workspace/notebooks
+      - ${PROJECT_DIR}/logs:/workspace/logs
+
+  tensorboard:
+    image: activeeon/tensorboard
+    command: tensorboard --logdir /workspace/logs
+    ports:
+      - ${TENSORBOARD_PORT}:6006
+    volumes:
+      - ${PROJECT_DIR}/logs:/workspace/logs

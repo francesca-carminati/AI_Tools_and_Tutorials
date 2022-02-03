@@ -1,0 +1,10 @@
+{
+    "_template": "git@github.com:Peltarion/Experimentator-3000.git",
+    "generate_example_folder": "yes",
+    "init_git": "yes",
+    "module_name": "example",
+    "project_description": "Trying the new e3k",
+    "project_name": "Example",
+    "project_title": "Example",
+    "python_version": "3.8"
+}
